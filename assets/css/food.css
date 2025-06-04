@@ -23,7 +23,7 @@
 
 .container_topico .container_btn_opcoes button {
 
-    height: 40px;
+    height: 33px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -55,7 +55,7 @@
 
 .search input {
     width: 100%;
-    padding: 10px 20px;
+    padding: 5px 20px;
     border-radius: 20px;
     border: 1px solid black;
     font-size: 1.4rem;
@@ -83,7 +83,7 @@
 }
 
 .container_food .foods {
-    width: 406px;
+    width: 356px;
     height: 414px;
     border-radius: 15px;
     box-shadow: 2px 2px 20px rgb(207, 207, 207);
@@ -126,7 +126,7 @@
 }
 
 .container_food .foods .container_btn {
-    margin: 0 20px;
+    margin: 0 10px;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -138,14 +138,14 @@
     align-items: center;
     gap: 10%;
     text-align: center;
-    margin: 20px;
-    width: 100px;
+    margin: 5px;
+    min-width: 80px;
     height: 40px;
     border: none;
     border-radius: 10px;
     background-color: rgb(228, 228, 228);
     color: #000;
-    font-size: 1rem;
+    font-size: 0.8rem;
     cursor: pointer;
     text-decoration: none;
     transition: 0.7s;

@@ -51,6 +51,11 @@
 </template>
 
 
+<style>
+@import url("~/assets/css/food.css");
+</style>
+
+
 <script setup scoped lang="js">
 
 const URL_BASE_API = "http://localhost:8081";
@@ -98,7 +103,3 @@ function abrirForm() {
 
 
 </script>
-
-<style>
-@import url("~/assets/css/food.css");
-</style>

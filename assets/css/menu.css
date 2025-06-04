@@ -30,7 +30,7 @@ body{
 
 .menu ul {
   position: absolute;
-  right: 240px;
+  right: 2%;
   display: flex;
   justify-content: space-around;
   align-items: center;

@@ -13,8 +13,8 @@
 }
 
 .container_desc_food .img_food {
-    min-width: 500px;
-    height: 400px;
+    min-width: 400px;
+    height: 300px;
     border-radius: 15px;
     object-fit: cover;
     box-shadow: 2px 2px 20px rgb(126, 126, 126);
