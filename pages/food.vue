@@ -40,14 +40,14 @@
                     <img src="public/icones/editar.png">
                     Editar
                 </button>
-                <button id="btn_excluir" class="btn_acoes_food" @click="excluir_receita">
+                <button id="btn_excluir" class="btn_acoes_food" @click="excluir_receita(receita.id_receita)">
                     <img src="public/icones/delete.png">
                     Excluir
                 </button>
             </div>
         </div>
     </section>
-    <FormFood id="form" :categorias="listasCategorias" :ingredientes="listasIngredientes" :medidas="listasMedidas"/>
+    <FormFood id="form" :categorias="listasCategorias" :ingredientes="listasIngredientes" :medidas="listasMedidas" />
 </template>
 
 
@@ -71,7 +71,7 @@ async function excluir_receita(id_receita) {
     const {
         data: receitaExcluida, //armazenando lista de receitas vindo da API (back-end)
         error: errosExcluirReceita //Capturando erros da requisição
-    } = await useFetch(URL_BASE_API + "/receitas/excluir/3", { method: "DELETE" });
+    } = await useFetch(URL_BASE_API + "/receitas/excluir/" + id_receita, { method: "DELETE" });
 }
 
 //Request de categorias (recebendo lista de categorias de receitas)
