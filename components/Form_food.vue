@@ -24,27 +24,34 @@
                 <label for="">Modo de Preparo:</label>
                 <textarea name="" id="" v-model="modo_preparo_receita"></textarea>
 
+                <div v-for="ingredienteAdd in listaIngredientes">
+                    <p>{{ ingredienteAdd }}</p>
+                    <p></p>
+                </div>
+
                 <label for="">Ingredientes:</label>
                 <div class="container_checkbox">
-                    <div class="checkbox" v-if="ingredientes" v-for="(ingrediente, index) in ingredientes.data"
-                        :key="ingrediente.id_ingred">
-                        {{ index }}
-                        <input type="checkbox" class="square_check" v-model="ingredientes_receita.id_ingred"
-                            :value="ingrediente.id_ingred">
+                    <div class="checkbox">
 
-                        <label for="">{{ ingrediente.nome }}</label>
-
-                        <select name="medida" id="" v-model="ingredientes_receita.id_med">
+                        <select name="medida" id="" v-model="ingredientes_receita">
                             <option :value="0">Selecione</option>
-                            <option :value="medida.id_med" v-if="medidas" v-for="medida in medidas.data"
-                                :key="medida.id_med">{{
+                            <option v-if="ingredientes" v-for="ingrediente in ingredientes.data"
+                                :value="ingredientes.id_ingred" :key="ingrediente.id_ingred">{{
+                                    ingrediente.nome }}</option>
+                        </select>
+
+                        <select name="medida" id="" v-model="medidas_receita">
+                            <option :value="0">Selecione</option>
+                            <option v-if="medidas" v-for="medida in medidas.data" :value="medida" :key="medida.id_med">
+                                {{
                                     medida.nome_med }}</option>
                         </select>
                     </div>
                 </div>
 
 
-
+                <button type="button" @click="addIngredienteNaLista">Add
+                    Ingrediente</button>
                 <button type="submit">Salvar</button>
             </div>
 
@@ -84,16 +91,22 @@
 <script setup scoped lang="js">
 import { ref } from 'vue';
 
-let T = {
-    id_ingred: false, id_med: 0
-}
-
 //Inicializando variáveis que vão receber dados do formulário
 const nome_receita = ref("");
 const categoria_receita = ref("");
 const modo_preparo_receita = ref("");
-const ingredientes_receita = ref < T[0] > ({ id_ingred: false, id_med: 0 });
-const medidas_receita = ref("");
+const ingredientes_receita = ref();
+const medidas_receita = ref();
+
+
+let listaIngredientes = [];
+console.log(ingredientes_receita.value);
+
+function addIngredienteNaLista() {
+    listaIngredientes.push(ingredientes_receita.value);
+    console.log(listaIngredientes);
+}
+
 
 function pegarDadosForm() {
     console.log(nome_receita.value);

@@ -81,18 +81,45 @@ const {
 } = await useFetch(URL_BASE_API + "/receitas/categoria/listar");
 
 //Request de ingredientes (recebendo lista de categorias de receitas)
-const {
+let {
     data: listasIngredientes, //armazenando lista de ingredientes vindo da API (back-end)
     error: errosIngredientes //Capturando erros da requisição
 } = await useFetch(URL_BASE_API + "/ingredientes/listar");
 
+listasIngredientes = {
+    data: [
+        {
+            id_ingred: 1,
+            nome: "Pimenta",
+        },
+        {
+            id_ingred: 2,
+            nome: "Sal",
+        }
+
+    ]
+}
 
 //Request de medidas (recebendo lista de categorias de receitas)
-const {
+let {
     data: listasMedidas, //armazenando lista de medidas vindo da API (back-end)
     error: errosMedidas //Capturando erros da requisição
 } = await useFetch(URL_BASE_API + "/receitas/medida/listar");
 
+
+listasMedidas = {
+    data: [
+        {
+            id_med: 1,
+            nome_med: "1 colher",
+        },
+        {
+            id_med: 2,
+            nome_med: "10 ml",
+        }
+
+    ]
+}
 
 
 //Apresentar/exibir formulário de cadastro de receita

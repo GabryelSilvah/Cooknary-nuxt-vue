@@ -1,6 +1,6 @@
 .container_form {
     width: 100vw;
-    min-height: 100vh;
+    height: 100vh;
     background-color: #00000099;
     position: fixed;
     z-index: 999;
@@ -12,7 +12,7 @@
 
 .form {
     width: 450px;
-    height: 70vh;
+    height: 80vh;
     background-color: #fff;
     max-width: 80%;
     border-radius: 15px;
@@ -98,7 +98,7 @@
 }
 
 .form button {
-    width: 120px;
+    min-width: 120px;
     border: none;
     border-radius: 4px;
     padding: 7px;
