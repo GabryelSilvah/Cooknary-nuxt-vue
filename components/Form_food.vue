@@ -33,18 +33,17 @@
                 <div class="container_checkbox">
                     <div class="checkbox">
 
-                        <select name="medida" id="" v-model="ingredientes_receita">
+                        <select name="ingrediente" v-model="ingredientes_receita">
                             <option :value="0">Selecione</option>
-                            <option v-if="ingredientes" v-for="ingrediente in ingredientes.data"
-                                :value="ingredientes.id_ingred" :key="ingrediente.id_ingred">{{
-                                    ingrediente.nome }}</option>
+                            <option :value="ingredientes.id_ingred" v-if="ingredientes"
+                                v-for="ingrediente in ingredientes.data" :key="ingrediente.id_ingred">
+                                {{ ingrediente.nome }}</option>
                         </select>
 
                         <select name="medida" id="" v-model="medidas_receita">
                             <option :value="0">Selecione</option>
                             <option v-if="medidas" v-for="medida in medidas.data" :value="medida" :key="medida.id_med">
-                                {{
-                                    medida.nome_med }}</option>
+                                {{ medida.nome_med }}</option>
                         </select>
                     </div>
                 </div>
@@ -95,12 +94,10 @@ import { ref } from 'vue';
 const nome_receita = ref("");
 const categoria_receita = ref("");
 const modo_preparo_receita = ref("");
-const ingredientes_receita = ref();
-const medidas_receita = ref();
-
+const ingredientes_receita = ref(0);
+const medidas_receita = ref(0);
 
 let listaIngredientes = [];
-console.log(ingredientes_receita.value);
 
 function addIngredienteNaLista() {
     listaIngredientes.push(ingredientes_receita.value);
