@@ -17,7 +17,7 @@
     </form>
 
     <section class="container_food">
-        <div class="foods" v-for="receita in listasReceitas.data" :key="receita.id_receita">
+        <div class="foods" v-if="listasReceitas" v-for="receita in listasReceitas.data" :key="receita.id_receita">
             <img src="public/image/lamen.jpg">
             <h2 class="titulo_food">{{ receita.nome_receita }}</h2>
             <div class="itens_food">
