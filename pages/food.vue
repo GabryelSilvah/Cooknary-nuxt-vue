@@ -56,8 +56,15 @@
     </section>
 
     <!-- Chamando componente de formulário e passando dados vindo da API para os campos de select no formulario -->
-    <FormFood id="form" :categorias="listasCategorias" :ingredientes="listasIngredientes" :medidas="listasMedidas"
+    <FormFood 
+        id="form" 
+        :categorias="listasCategorias" 
+        :ingredientes="listasIngredientes" 
+        :medidas="listasMedidas"
         :funcionarios="listasFuncionarios" />
+
+
+
 </template>
 
 
@@ -68,7 +75,11 @@
 
 <script setup scoped lang="js">
 
+//Endereço padrão da API (Spring Boot)
 const URL_BASE_API = "http://localhost:8081";
+
+
+
 
 
 //Request de receitas (recebendo lista de receitas)
@@ -92,7 +103,6 @@ let {
 } = await useFetch(URL_BASE_API + "/ingredientes/listar");
 
 
-
 //Request de medidas (recebendo lista de categorias de receitas)
 let {
     data: listasMedidas, //armazenando lista de medidas vindo da API (back-end)
@@ -105,7 +115,6 @@ let {
     data: listasFuncionarios, //armazenando lista de funcionários vindo da API (back-end)
     error: errosFuncinarios //Capturando erros da requisição
 } = await useFetch(URL_BASE_API + "/funcionarios/listar");
-
 
 
 //Apresentar/exibir formulário de cadastro de receita
@@ -123,6 +132,7 @@ async function excluir_receita(id_receita) {
         error: errosExcluirReceita //Capturando erros da requisição
     } = await useFetch(URL_BASE_API + "/receitas/excluir/" + id_receita, { method: "DELETE" });
 }
+
 
 function removerCardReita(index) {
     listasReceitas.value.data.slice(index, 1);
