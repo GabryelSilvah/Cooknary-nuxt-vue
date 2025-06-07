@@ -17,8 +17,11 @@
     </form>
 
     <section class="container_food">
-        <div class="foods" v-if="listasReceitas" v-for="receita in listasReceitas.data" :key="receita.id_receita">
+        <div class="foods" v-if="listasReceitas" v-for="receita in listasReceitas.data" :key="receita.id_receita"
+            @remove="removerCardReita(receita.id_receita)">
             <img src="public/image/lamen.jpg">
+
+
             <h2 class="titulo_food">{{ receita.nome_receita }}</h2>
             <div class="itens_food">
                 <p>Data Publicação: </p>
@@ -36,10 +39,14 @@
                     <img src="public/icones/ver.png">
                     Ver
                 </NuxtLink>
+
+
                 <button class="btn_acoes_food" @click="abrirForm">
                     <img src="public/icones/editar.png">
                     Editar
                 </button>
+
+
                 <button id="btn_excluir" class="btn_acoes_food" @click="excluir_receita(receita.id_receita)">
                     <img src="public/icones/delete.png">
                     Excluir
@@ -47,7 +54,10 @@
             </div>
         </div>
     </section>
-    <FormFood id="form" :categorias="listasCategorias" :ingredientes="listasIngredientes" :medidas="listasMedidas" />
+
+    <!-- Chamando componente de formulário e passando dados vindo da API para os campos de select no formulario -->
+    <FormFood id="form" :categorias="listasCategorias" :ingredientes="listasIngredientes" :medidas="listasMedidas"
+        :funcionarios="listasFuncionarios" />
 </template>
 
 
@@ -60,19 +70,13 @@
 
 const URL_BASE_API = "http://localhost:8081";
 
+
 //Request de receitas (recebendo lista de receitas)
 const {
     data: listasReceitas, //armazenando lista de receitas vindo da API (back-end)
     error: errosReceitas //Capturando erros da requisição
 } = await useFetch(URL_BASE_API + "/receitas/listar");
 
-async function excluir_receita(id_receita) {
-    //Request de receitas (recebendo lista de receitas)
-    const {
-        data: receitaExcluida, //armazenando lista de receitas vindo da API (back-end)
-        error: errosExcluirReceita //Capturando erros da requisição
-    } = await useFetch(URL_BASE_API + "/receitas/excluir/" + id_receita, { method: "DELETE" });
-}
 
 //Request de categorias (recebendo lista de categorias de receitas)
 const {
@@ -80,25 +84,14 @@ const {
     error: errosCategorias //Capturando erros da requisição
 } = await useFetch(URL_BASE_API + "/receitas/categoria/listar");
 
+
 //Request de ingredientes (recebendo lista de categorias de receitas)
 let {
     data: listasIngredientes, //armazenando lista de ingredientes vindo da API (back-end)
     error: errosIngredientes //Capturando erros da requisição
 } = await useFetch(URL_BASE_API + "/ingredientes/listar");
 
-listasIngredientes = {
-    data: [
-        {
-            id_ingred: 1,
-            nome: "Pimenta",
-        },
-        {
-            id_ingred: 2,
-            nome: "Sal",
-        }
 
-    ]
-}
 
 //Request de medidas (recebendo lista de categorias de receitas)
 let {
@@ -107,19 +100,12 @@ let {
 } = await useFetch(URL_BASE_API + "/receitas/medida/listar");
 
 
-listasMedidas = {
-    data: [
-        {
-            id_med: 1,
-            nome_med: "1 colher",
-        },
-        {
-            id_med: 2,
-            nome_med: "10 ml",
-        }
+//Request de funcionários (recebendo lista de categorias de receitas)
+let {
+    data: listasFuncionarios, //armazenando lista de funcionários vindo da API (back-end)
+    error: errosFuncinarios //Capturando erros da requisição
+} = await useFetch(URL_BASE_API + "/funcionarios/listar");
 
-    ]
-}
 
 
 //Apresentar/exibir formulário de cadastro de receita
@@ -128,5 +114,18 @@ function abrirForm() {
     form.setAttribute("style", "display:flex");
 }
 
+
+//Função usada para excluir receita atravé do evento de click no button
+async function excluir_receita(id_receita) {
+    //Request de receitas (recebendo lista de receitas)
+    const {
+        data: receitaExcluida, //armazenando lista de receitas vindo da API (back-end)
+        error: errosExcluirReceita //Capturando erros da requisição
+    } = await useFetch(URL_BASE_API + "/receitas/excluir/" + id_receita, { method: "DELETE" });
+}
+
+function removerCardReita(index) {
+    listasReceitas.value.data.slice(index, 1);
+}
 
 </script>

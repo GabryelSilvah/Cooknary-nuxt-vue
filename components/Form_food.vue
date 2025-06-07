@@ -6,51 +6,66 @@
         <form action="" method="post" class="form" @submit.prevent="pegarDadosForm">
 
             <div class="sections">
-
                 <img src="public/icones/close.png" id="btn_close" @click="fecharForm">
                 <h2 class="topico">Informações básicas</h2>
 
+
                 <label for="">Nome da Receita:</label>
-                <input type="text" v-model="nome_receita" name="nome_receita">
+                <input type="text" v-model="nome_referencia_form" name="nome_referencia_form">
+
 
                 <label for="">Categoria:</label>
-                <select name="categoria" id="" v-model="categoria_receita">
+                <select name="categoria" id="" v-model="categoria_referencia_form">
                     <option :value="0">Selecione</option>
                     <option v-if="categorias" v-for="categoria in categorias.data" :key="categoria.id_cat"
                         :value="categoria.id_cat">
-                        {{ categoria.nome_categoria }}</option>
+                        {{ categoria.nome_categoria }}
+                    </option>
                 </select>
 
-                <label for="">Modo de Preparo:</label>
-                <textarea name="" id="" v-model="modo_preparo_receita"></textarea>
 
-                <div v-for="ingredienteAdd in listaIngredientes">
-                    <p>{{ ingredienteAdd }}</p>
-                    <p></p>
-                </div>
+                <label for="">Cozinheiro:</label>
+                <select name="cozinheiro" id="" v-model="cozinheiro_referencia_form">
+                    <option :value="0">Selecione</option>
+                    <option v-if="funcionarios" v-for="cozinheiro in funcionarios.data" :key="cozinheiro.id_func"
+                        :value="cozinheiro.id">
+                        {{ cozinheiro.nome }}
+                    </option>
+                </select>
+
+
+                <label for="">Modo de Preparo:</label>
+                <textarea name="" id="" v-model="modo_preparo_referencia_form"></textarea>
+
 
                 <label for="">Ingredientes:</label>
                 <div class="container_checkbox">
                     <div class="checkbox">
 
-                        <select name="ingrediente" v-model="ingredientes_receita">
+
+                        <select name="ingrediente" v-model="ingredientes_referencia_form">
                             <option :value="0">Selecione</option>
-                            <option :value="ingredientes.id_ingred" v-if="ingredientes"
-                                v-for="ingrediente in ingredientes.data" :key="ingrediente.id_ingred">
-                                {{ ingrediente.nome }}</option>
+                            <option v-if="ingredientes" v-for="ingrediente in ingredientes.data"
+                                :key="ingrediente.id_ingred" :value="ingrediente.id_ingred">
+                                {{ ingrediente.nome }}
+                            </option>
                         </select>
 
-                        <select name="medida" id="" v-model="medidas_receita">
+
+                        <select name="medida" id="" v-model="medida_referencia_form">
                             <option :value="0">Selecione</option>
-                            <option v-if="medidas" v-for="medida in medidas.data" :value="medida" :key="medida.id_med">
-                                {{ medida.nome_med }}</option>
+                            <option v-if="medidas" v-for="medida in medidas.data" :key="medida.id_med"
+                                :value="medida.id_med">
+                                {{ medida.nome_med }}
+                            </option>
                         </select>
                     </div>
                 </div>
 
-
                 <button type="button" @click="addIngredienteNaLista">Add
-                    Ingrediente</button>
+                    Ingrediente
+                </button>
+
                 <button type="submit">Salvar</button>
             </div>
 
@@ -90,35 +105,80 @@
 <script setup scoped lang="js">
 import { ref } from 'vue';
 
-//Inicializando variáveis que vão receber dados do formulário
-const nome_receita = ref("");
-const categoria_receita = ref("");
-const modo_preparo_receita = ref("");
-const ingredientes_receita = ref(0);
-const medidas_receita = ref(0);
-
-let listaIngredientes = [];
-
-function addIngredienteNaLista() {
-    listaIngredientes.push(ingredientes_receita.value);
-    console.log(listaIngredientes);
-}
-
-
-function pegarDadosForm() {
-    console.log(nome_receita.value);
-    console.log(categoria_receita.value);
-    console.log(modo_preparo_receita.value);
-    console.log(ingredientes_receita.value);
-    console.log(medidas_receita.value);
-}
-//Receber dados de quem usou o componente e adicionar no formulário atrvés do modelo abaixo
+//Definindo os dados dos campos selecet que devem ser passado por quem usar o componente Form_food
 defineProps({
     categorias: Object,
     ingredientes: Object,
-    medidas: Object
+    medidas: Object,
+    funcionarios: Object
 });
 
+
+//Inicializando variáveis que vão receber dados do formulário
+const nome_referencia_form = ref("");
+const categoria_referencia_form = ref(0);
+const cozinheiro_referencia_form = ref(0);
+const modo_preparo_referencia_form = ref("");
+const ingredientes_referencia_form = ref(0);
+const medida_referencia_form = ref(0);
+
+
+//Formato de dados para envio de cadastro da receita
+//Será usado para adicionar os dados vindo do formulário
+//Posteriomente, enviar esses dados na requisição para API
+let receitaModel = {
+    nomeReceita: "",
+    data_criacao: "",
+    categoria_id: { id_cat: 0 },
+    cozinheiro_id: { id_func: 0 },
+    modo_preparo: "",
+    ingredientes_id: []
+}
+
+//Formato de dados para envio de cadastro da receita
+//Criando o formato de ingredientes separado de receita porque será uma lista de ingredientes
+//Posteriomente, essa lista de ingredientes é adicionada na receitaModel
+let ingredientesModel = {
+    medida_id: { id_med: 0 },
+    ingrediente_id: { id_ingred: 0 }
+}
+
+//Função que é chamda toda vez que um novo ingrediente é adicionado no formulário
+//Ela pega o ingrediente e medida e adiciona no obejeto ingredientesModel
+//Posteriomente, pegar esse objeto (ingredientesModel) e adiciona no objeto receitaModel, dentro do array de ingredientes_id
+function addIngredienteNaLista() {
+    ingredientesModel.ingrediente_id.id_ingred = ingredientes_referencia_form.value;
+    ingredientesModel.medida_id.id_med = medida_referencia_form.value;
+    receitaModel.ingredientes_id.push(ingredientesModel);
+}
+
+//Função que recebe os dados após o envio dos dados do formulario e adiciona no objeto receitaModel
+//com exerção do do campo ingrediente porque já foi pego pela função addIngredienteNaLista()
+async function pegarDadosForm() {
+    receitaModel.nomeReceita = nome_referencia_form.value;
+    receitaModel.data_criacao = "2025-05-03";
+    receitaModel.categoria_id.id_cat = categoria_referencia_form.value;
+    receitaModel.cozinheiro_id.id_func = cozinheiro_referencia_form.value;
+    receitaModel.modo_preparo = modo_preparo_referencia_form.value;
+
+    const URL_BASE_API = "http://localhost:8081";
+
+    //Enviando dados para API
+    const {
+        data: ResponseAPI,
+        error: errosCadastro
+    } = await useFetch(URL_BASE_API + "/receitas/cadastrar", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(receitaModel)
+    });
+
+    console.log(ResponseAPI);
+    console.log(errosCadastro);
+    console.log(JSON.stringify(receitaModel));
+}
 
 
 //Fechar formulário
