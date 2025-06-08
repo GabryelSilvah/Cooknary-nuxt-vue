@@ -1,70 +1,70 @@
 <template>
 
-    <section class="container_topico">
-        <h2 class="titulo_topico">Caldos</h2>
+    <Menu />
 
-        <div class="container_btn_opcoes">
-            <button id="btn_add_food" @click="abrirForm">
-                <img src="public/icones/plus.png" alt="">
-                Adicionar Food
-            </button>
-        </div>
-    </section>
+    <main>
 
-    <form class="search" method="post">
-        <input type="text" name="" id="" placeholder="Pesquisar foods">
-        <button type="submit">Pesquisar</button>
-    </form>
+        <section class="container_topico">
+            <h2 class="titulo_topico">Receitas</h2>
 
-    <section class="container_food">
-        <div class="foods" v-if="listasReceitas" v-for="receita in listasReceitas.data" :key="receita.id_receita"
-            @remove="removerCardReita(receita.id_receita)">
-            <img src="public/image/lamen.jpg">
-
-
-            <h2 class="titulo_food">{{ receita.nome_receita }}</h2>
-            <div class="itens_food">
-                <p>Data Publicação: </p>
-                <p>{{ receita.data_criacao }}</p>
-            </div>
-
-            <div class="itens_food">
-                <p>Categoria: </p>
-                <p>{{ receita.categoria }}</p>
-            </div>
-
-            <div class="container_btn">
-                <NuxtLink :to="{ path: `/descricao_food`, query: { id_receita: receita.id_receita } }"
-                    class="btn_acoes_food">
-                    <img src="public/icones/ver.png">
-                    Ver
-                </NuxtLink>
-
-
-                <button class="btn_acoes_food" @click="abrirForm">
-                    <img src="public/icones/editar.png">
-                    Editar
-                </button>
-
-
-                <button id="btn_excluir" class="btn_acoes_food" @click="excluir_receita(receita.id_receita)">
-                    <img src="public/icones/delete.png">
-                    Excluir
+            <div class="container_btn_opcoes">
+                <button id="btn_add_food" @click="abrirForm">
+                    <img src="public/icones/plus.png" alt="">
+                    Adicionar Receita
                 </button>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Chamando componente de formulário e passando dados vindo da API para os campos de select no formulario -->
-    <FormFood 
-        id="form" 
-        :categorias="listasCategorias" 
-        :ingredientes="listasIngredientes" 
-        :medidas="listasMedidas"
-        :funcionarios="listasFuncionarios" />
+        <form class="search" method="post">
+            <input type="text" name="" id="" placeholder="Pesquisar foods">
+            <button type="submit">Pesquisar</button>
+        </form>
+
+        <section class="container_food">
+            <div class="foods" v-if="listasReceitas" v-for="receita in listasReceitas.data" :key="receita.id_receita"
+                @remove="removerCardReita(receita.id_receita)">
+                <img src="public/image/lamen.jpg">
 
 
+                <h2 class="titulo_food">{{ receita.nome_receita }}</h2>
+                <div class="itens_food">
+                    <p>Data Publicação: </p>
+                    <p>{{ receita.data_criacao }}</p>
+                </div>
 
+                <div class="itens_food">
+                    <p>Categoria: </p>
+                    <p>{{ receita.categoria }}</p>
+                </div>
+
+                <div class="container_btn">
+                    <NuxtLink :to="{ path: `/descricao_food`, query: { id_receita: receita.id_receita } }"
+                        class="btn_acoes_food">
+                        <img src="public/icones/ver.png">
+                        Ver
+                    </NuxtLink>
+
+
+                    <button class="btn_acoes_food" @click="abrirForm(receita)">
+                        <img src="public/icones/editar.png">
+                        Editar
+                    </button>
+
+
+                    <button id="btn_excluir" class="btn_acoes_food" @click="excluir_receita(receita.id_receita)">
+                        <img src="public/icones/delete.png">
+                        Excluir
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chamando componente de formulário e passando dados vindo da API para os campos de select no formulario -->
+        <FormFood id="form" :categorias="listasCategorias" :ingredientes="listasIngredientes" :medidas="listasMedidas"
+            :funcionarios="listasFuncionarios" :dadosCadastrados="testeRef" v-model="testeRef"/>
+
+
+    </main>
 </template>
 
 
@@ -74,66 +74,62 @@
 
 
 <script setup scoped lang="js">
+import { receitaAlterar } from '~/assets/js/request_api_avaliacao';
+import { categoriaListar } from '~/assets/js/request_api_categorias';
+import { funcionarioListar } from '~/assets/js/request_api_funcionario';
+import { ingredientesListar } from '~/assets/js/request_api_ingredientes';
+import { medidasListar } from '~/assets/js/request_api_medidas';
+import { receitaDeletar, receitasListar } from '~/assets/js/request_api_receita';
 
-//Endereço padrão da API (Spring Boot)
-const URL_BASE_API = "http://localhost:8081";
 
+const testeRef = ref("");
 
-
-
+let teste = {};
 
 //Request de receitas (recebendo lista de receitas)
-const {
-    data: listasReceitas, //armazenando lista de receitas vindo da API (back-end)
-    error: errosReceitas //Capturando erros da requisição
-} = await useFetch(URL_BASE_API + "/receitas/listar");
+const listasReceitas = await receitasListar();
 
 
 //Request de categorias (recebendo lista de categorias de receitas)
-const {
-    data: listasCategorias, //armazenando lista de categoria vindo da API (back-end)
-    error: errosCategorias //Capturando erros da requisição
-} = await useFetch(URL_BASE_API + "/receitas/categoria/listar");
+const listasCategorias = await categoriaListar();
 
 
-//Request de ingredientes (recebendo lista de categorias de receitas)
-let {
-    data: listasIngredientes, //armazenando lista de ingredientes vindo da API (back-end)
-    error: errosIngredientes //Capturando erros da requisição
-} = await useFetch(URL_BASE_API + "/ingredientes/listar");
+const listasIngredientes = await ingredientesListar();
 
 
 //Request de medidas (recebendo lista de categorias de receitas)
-let {
-    data: listasMedidas, //armazenando lista de medidas vindo da API (back-end)
-    error: errosMedidas //Capturando erros da requisição
-} = await useFetch(URL_BASE_API + "/receitas/medida/listar");
+const listasMedidas = await medidasListar();
 
 
 //Request de funcionários (recebendo lista de categorias de receitas)
-let {
-    data: listasFuncionarios, //armazenando lista de funcionários vindo da API (back-end)
-    error: errosFuncinarios //Capturando erros da requisição
-} = await useFetch(URL_BASE_API + "/funcionarios/listar");
+const listasFuncionarios = await funcionarioListar();
 
 
 //Apresentar/exibir formulário de cadastro de receita
-function abrirForm() {
+function abrirForm(dados_receita = null) {
+
+
     let form = document.querySelector("#form");
     form.setAttribute("style", "display:flex");
+
+    testeRef.value =  dados_receita;;
+}
+
+async function alterando_receita(id_receita) {
+
+    //Request de receitas (alterando receitas)
+    const receitaAlterada = await receitaAlterar(id_receita);
+
 }
 
 
 //Função usada para excluir receita atravé do evento de click no button
 async function excluir_receita(id_receita) {
     //Request de receitas (recebendo lista de receitas)
-    const {
-        data: receitaExcluida, //armazenando lista de receitas vindo da API (back-end)
-        error: errosExcluirReceita //Capturando erros da requisição
-    } = await useFetch(URL_BASE_API + "/receitas/excluir/" + id_receita, { method: "DELETE" });
+    const receitaExcluida = await receitaDeletar(id_receita);
 }
 
-
+//Refresh na página após excluir receita
 function removerCardReita(index) {
     listasReceitas.value.data.slice(index, 1);
 }

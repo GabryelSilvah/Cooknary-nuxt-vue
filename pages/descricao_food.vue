@@ -1,20 +1,24 @@
 <template>
 
-    <section class="container_desc_food">
-        <div class="detalhes" v-if="receitaPorID">
-            <h2 class="titulo_food">{{ receitaPorID.data.nome_receita }}</h2>
-            <p id="modo_preparo">
-                {{ receitaPorID.data.modo_preparo }}
-            </p>
-            <div class="itens_food">
-                <p>Categoria: </p>
-                <p>{{ receitaPorID.data.categoria }}</p>
-            </div>
-        </div>
-        <img src="public/image/lamen2.jpg" class="img_food" alt="">
-    </section>
+    <Menu />
 
-    <!--
+    <main>
+
+        <section class="container_desc_food">
+            <div class="detalhes" v-if="receitaPorID">
+                <h2 class="titulo_food">{{ receitaPorID.data.nome_receita }}</h2>
+                <p id="modo_preparo">
+                    {{ receitaPorID.data.modo_preparo }}
+                </p>
+                <div class="itens_food">
+                    <p>Categoria: </p>
+                    <p>{{ receitaPorID.data.categoria }}</p>
+                </div>
+            </div>
+            <img src="public/image/lamen2.jpg" class="img_food" alt="">
+        </section>
+
+        <!--
     Funcionalidade futura, dependendo do prazo, implementar
     <section class="container_desc_food">
         <div class="detalhes">
@@ -32,16 +36,18 @@
         </div>
     </section>
 -->
-    <section class="container_desc_food">
-        <div class="container_width" v-if="receitaPorID">
-            <h2 class="subtitulo">Ingredientes</h2>
+        <section class="container_desc_food">
+            <div class="container_width" v-if="receitaPorID">
+                <h2 class="subtitulo">Ingredientes</h2>
 
-            <ul class="lista_ingredientes" v-for="ingrediente in receitaPorID.data.ingredientes_id"
-                :key="ingrediente.id_ingred">
-                <li>{{ ingrediente.nome }}</li>
-            </ul>
-        </div>
-    </section>
+                <ul class="lista_ingredientes" v-for="ingrediente in receitaPorID.data.ingredientes_id"
+                    :key="ingrediente.id_ingred">
+                    <li>{{ ingrediente.nome }}</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
 
 </template>
 

@@ -11,7 +11,8 @@
 
 
                 <label for="">Nome da Receita:</label>
-                <input type="text" v-model="nome_referencia_form" name="nome_referencia_form"
+                {{ dadosCadastrados.nome_receita }}
+                <input type="text" v-model="dadosCadastrados.nome_receita" name="nome_referencia_form"
                     placeholder="Ex: Risoto de camarão" required>
 
 
@@ -37,7 +38,7 @@
 
                 <label for="">Ingredientes:</label>
                 <div class="container_itens_add" id="caixa_de_itens_salvas">
-
+                    <p>Adicione ingredientes e suas medidas</p>
                 </div>
 
 
@@ -72,9 +73,6 @@
                 <label for="">Modo de Preparo:</label>
                 <textarea name="" id="" v-model="modo_preparo_referencia_form" placeholder="Descreva o modo de preparo">
                 </textarea>
-
-
-
 
 
                 <button type="submit">Salvar</button>
@@ -117,16 +115,18 @@
 <script setup scoped lang="js">
 import { ref } from 'vue';
 
+
+
 const URL_BASE_API = "http://localhost:8081";
 
 //Definindo os dados dos campos selecet que devem ser passado por quem usar o componente Form_food
-defineProps({
+let props = defineProps({
+    dadosCadastrados: Object,
     categorias: Object,
     ingredientes: Object,
     medidas: Object,
     funcionarios: Object
 });
-
 
 
 //Inicializando variáveis que vão receber dados do formulário
@@ -136,6 +136,8 @@ const cozinheiro_referencia_form = ref(0);
 const modo_preparo_referencia_form = ref("");
 const ingredientes_referencia_form = ref(0);
 const medida_referencia_form = ref(0);
+
+
 
 
 //Formato de dados para envio de cadastro da receita
@@ -215,6 +217,7 @@ async function addIngredienteNaLista() {
 //com exerção do do campo ingrediente porque já foi pego pela função addIngredienteNaLista()
 async function pegarDadosForm() {
     receitaModel.nomeReceita = nome_referencia_form.value;
+
     receitaModel.data_criacao = "2025-05-03";
     receitaModel.categoria_id.id_cat = categoria_referencia_form.value;
     receitaModel.cozinheiro_id.id_func = cozinheiro_referencia_form.value;

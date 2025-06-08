@@ -1,45 +1,12 @@
-<template>
-
-    <section class="banner_page">
-        <img src="public/image/banner_page.png" alt="">
-        <h1 class="name_page">Asian Food</h1>
-    </section>
-    
-    <h2 class="topico_section">Foods Recentes</h2>  
-    <section class="foods_recentes">
-
-        <div class="foods">
-            <img src="public/image/lamen.jpg">
-            <h2 class="titulo_food" th:text="${titulo_food}">Nome da comida</h2>
-            <div class="itens_food">
-                <p>Descrição: </p>
-                <p>Macarrão, ovo, carne...</p>
-            </div>
-
-            <div class="itens_food">
-                <p>Categoria: </p>
-                <p>Típicas</p>
-            </div>
-
-            <div class="itens_food pais_food">
-                <p>País: </p>
-                <p>Japão</p>
-                <img src="public/bandeiras/japan.png">
-            </div>
-            <div class="container_btn">
-                <a href="descricao_food" class="btn_acoes_food">
-                    <img src="public/icones/ver.png">
-                    Ver
-                </a>
-            </div>
-        </div>
-    </section>
+* {
+    box-sizing: border-box;
+    font-family: sans-serif;
+    padding: 0;
+    margin: 0;
+}
 
 
-</template>
-
-<style>
-.topico_section{
+.topico_section {
     width: 90vw;
     font-size: 2rem;
     margin-top: 50px;
@@ -49,6 +16,7 @@
     padding: 10px 20px;
     border-radius: 6px;
 }
+
 .banner_page {
     width: 100vw;
     height: 300px;
@@ -86,8 +54,8 @@
 }
 
 .foods_recentes .foods {
-    width: 456px;
-    height: 464px;
+   width: 356px;
+    height: 414px;
     border-radius: 15px;
     box-shadow: 2px 2px 20px rgb(207, 207, 207);
     overflow: hidden;
@@ -168,4 +136,3 @@
     background-color: rgb(250, 47, 11);
     color: #fff;
 }
-</style>

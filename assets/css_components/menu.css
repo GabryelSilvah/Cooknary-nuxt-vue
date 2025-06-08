@@ -1,6 +1,8 @@
-body{
+body {
   overflow-x: hidden;
+  background-color: #fff;
 }
+
 * {
   margin: 0;
   padding: 0;
@@ -71,5 +73,11 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 60px;
+  justify-content: center;
+}
+
+.titulo_page{
+  text-decoration: none;
+  color: #000;
+  font-size: 1.6rem;
 }
