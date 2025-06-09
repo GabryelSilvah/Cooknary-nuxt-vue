@@ -164,3 +164,12 @@
     background-color: rgb(250, 47, 11);
     color: #fff;
 }
+
+/*  */
+.container_composicao {
+    display: flex;
+    gap: 20px;
+    background-color: #00c4de83;
+    padding: 7px;
+    border-radius: 6px;
+}

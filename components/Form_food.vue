@@ -45,16 +45,20 @@
                     <div class="checkbox">
 
                         <!-- Selecionar ingrediente -->
-                        <select name="ingrediente" v-model="ingredientes_referencia_form" required>
+                        <select name="ingrediente" v-model="ingredientes_referencia_form" required class="select_ingred">
                             <option value="0">Selecione</option>
                             <option v-if="ingredientes" v-for="ingrediente in ingredientes.data"
                                 :key="ingrediente.id_ingred" :value="ingrediente.id_ingred">
                                 {{ ingrediente.nome }}
                             </option>
                         </select>
+                        
 
+                        <input type="number" min="1" value="1" class="input_quantidade">
+                        
+                        
                         <!-- Selecionar medida -->
-                        <select name="medida" id="" v-model="medida_referencia_form" required>
+                        <select name="medida" id="" v-model="medida_referencia_form" required class="select_ingred">
                             <option value="0">Selecione</option>
                             <option v-if="medidas" v-for="medida in medidas.data" :key="medida.id_med"
                                 :value="medida.id_med">
@@ -201,7 +205,7 @@ async function pegarDadosForm() {
     });
 
     console.log(JSON.stringify(receitaModel));
-    console.log(ResponseAPI.data);
+    console.log(ResponseAPI);
 
     fecharForm();
 }
@@ -252,6 +256,6 @@ async function exibir_ingrediente_add() {
 
 </script>
 
-<style>
+<style scoped>
 @import url("~/assets/css_components/form.css");
 </style>
