@@ -11,8 +11,7 @@
 
 
                 <label for="">Nome da Receita:</label>
-                {{ dadosCadastrados.nome_receita }}
-                <input type="text" v-model="dadosCadastrados.nome_receita" name="nome_referencia_form"
+                <input type="text" v-model="nome_referencia_form" name="nome_referencia_form"
                     placeholder="Ex: Risoto de camarão" required>
 
 
@@ -116,16 +115,16 @@
 import { ref } from 'vue';
 
 
-
 const URL_BASE_API = "http://localhost:8081";
 
+
 //Definindo os dados dos campos selecet que devem ser passado por quem usar o componente Form_food
-let props = defineProps({
-    dadosCadastrados: Object,
+defineProps({
     categorias: Object,
     ingredientes: Object,
     medidas: Object,
-    funcionarios: Object
+    funcionarios: Object,
+    dadosCadastrados: Object
 });
 
 
@@ -153,16 +152,13 @@ let receitaModel = {
 }
 
 
-//Formato de dados para envio de cadastro da receita
-//Criando o formato de ingredientes separado de receita porque será uma lista de ingredientes
-//Posteriomente, essa lista de ingredientes é adicionada na receitaModel
-
-
 //Função que é chamda toda vez que um novo ingrediente é adicionado no formulário
 //Ela pega o ingrediente e medida e adiciona no obejeto ingredientesModel
 //Posteriomente, pegar esse objeto (ingredientesModel) e adiciona no objeto receitaModel, dentro do array de ingredientes_id
 async function addIngredienteNaLista() {
 
+    //Criando o formato de ingredientes separado de receita porque será uma lista de ingredientes
+    //Posteriomente, essa lista de ingredientes é adicionada na receitaModel
     let ingredientesModel = {
         medida_id: { id_med: 0 },
         ingrediente_id: { id_ingred: 0 }
@@ -172,9 +168,54 @@ async function addIngredienteNaLista() {
     ingredientesModel.ingrediente_id.id_ingred = ingredientes_referencia_form.value;
     ingredientesModel.medida_id.id_med = medida_referencia_form.value;
 
+
     //Adicionando ingredientes em receitaModel
     receitaModel.ingredientes_id.push(ingredientesModel);
 
+    exibir_ingrediente_add();
+
+}
+
+
+//Função que recebe os dados após o envio dos dados do formulario e adiciona no objeto receitaModel
+//com exerção do do campo ingrediente porque já foi pego pela função addIngredienteNaLista()
+async function pegarDadosForm() {
+    receitaModel.nomeReceita = nome_referencia_form.value;
+    receitaModel.data_criacao = "2025-05-03";
+    receitaModel.categoria_id.id_cat = categoria_referencia_form.value;
+    receitaModel.cozinheiro_id.id_func = cozinheiro_referencia_form.value;
+    receitaModel.modo_preparo = modo_preparo_referencia_form.value;
+
+
+
+    //Enviando dados para API
+    const {
+        data: ResponseAPI,
+        error: errosCadastro
+    } = await useFetch(URL_BASE_API + "/receitas/cadastrar", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(receitaModel)
+    });
+
+    console.log(JSON.stringify(receitaModel));
+    console.log(ResponseAPI.data);
+
+    fecharForm();
+}
+
+
+//Fechar formulário
+function fecharForm() {
+    let container_form = document.querySelector(".container_form");
+    container_form.setAttribute("style", "display:none");
+}
+
+
+//Função para exibir uma lista de cada ingrediente que está sendo adicionado 
+async function exibir_ingrediente_add() {
 
     //Request de ingredientes (recebendo ingrediente procurado pelo ID)
     let {
@@ -188,7 +229,6 @@ async function addIngredienteNaLista() {
         data: ingredienteEncontrado, //armazenando lista de ingredientes vindo da API (back-end)
         error: errosIngredientes //Capturando erros da requisição
     } = await useFetch(URL_BASE_API + "/ingredientes/byId/" + ingredientes_referencia_form.value);
-
 
 
     //Exibir no formulário caixa com lista de ingredientes adicionados para cadastro
@@ -208,43 +248,6 @@ async function addIngredienteNaLista() {
     div.appendChild(medidaAdd);
 
     caixa_de_itens_salvas.insertAdjacentElement("beforeend", div);
-
-
-}
-
-
-//Função que recebe os dados após o envio dos dados do formulario e adiciona no objeto receitaModel
-//com exerção do do campo ingrediente porque já foi pego pela função addIngredienteNaLista()
-async function pegarDadosForm() {
-    receitaModel.nomeReceita = nome_referencia_form.value;
-
-    receitaModel.data_criacao = "2025-05-03";
-    receitaModel.categoria_id.id_cat = categoria_referencia_form.value;
-    receitaModel.cozinheiro_id.id_func = cozinheiro_referencia_form.value;
-    receitaModel.modo_preparo = modo_preparo_referencia_form.value;
-
-    console.log(JSON.stringify(receitaModel.ingredientes_id));
-
-    //Enviando dados para API
-    const {
-        data: ResponseAPI,
-        error: errosCadastro
-    } = await useFetch(URL_BASE_API + "/receitas/cadastrar", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(receitaModel)
-    });
-
-    fecharForm();
-}
-
-
-//Fechar formulário
-function fecharForm() {
-    let container_form = document.querySelector(".container_form");
-    container_form.setAttribute("style", "display:none");
 }
 
 </script>

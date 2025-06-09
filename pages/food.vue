@@ -3,7 +3,6 @@
     <Menu />
 
     <main>
-
         <section class="container_topico">
             <h2 class="titulo_topico">Receitas</h2>
 
@@ -61,8 +60,7 @@
 
         <!-- Chamando componente de formulário e passando dados vindo da API para os campos de select no formulario -->
         <FormFood id="form" :categorias="listasCategorias" :ingredientes="listasIngredientes" :medidas="listasMedidas"
-            :funcionarios="listasFuncionarios" :dadosCadastrados="testeRef" v-model="testeRef"/>
-
+            :funcionarios="listasFuncionarios"/>
 
     </main>
 </template>
@@ -112,7 +110,7 @@ function abrirForm(dados_receita = null) {
     let form = document.querySelector("#form");
     form.setAttribute("style", "display:flex");
 
-    testeRef.value =  dados_receita;;
+    testeRef.value = dados_receita;;
 }
 
 async function alterando_receita(id_receita) {

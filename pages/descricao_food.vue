@@ -42,7 +42,7 @@
 
                 <ul class="lista_ingredientes" v-for="ingrediente in receitaPorID.data.ingredientes_id"
                     :key="ingrediente.id_ingred">
-                    <li>{{ ingrediente.nome }}</li>
+                    <li>{{ ingrediente.nome }} {{ ingrediente.nome_med }}</li>
                 </ul>
             </div>
         </section>

@@ -4,7 +4,6 @@
 
   <main>
 
-
     <div class="container">
       <h1>Funcionários</h1>
       <input type="text" v-model="search" placeholder="Buscar funcionário..." class="search-input" />

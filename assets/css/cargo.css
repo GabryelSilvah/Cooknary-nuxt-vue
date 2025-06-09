@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 .cargos-container {
-  max-width: 1200px;
+  width: 100vw;
   margin: 0 auto;
   padding: 2rem;
   font-family: 'Inter', sans-serif;
@@ -53,7 +53,7 @@ h1 {
   background-color: white;
 }
 
-.cargos-table th, 
+.cargos-table th,
 .cargos-table td {
   padding: 1rem;
   text-align: left;
@@ -78,7 +78,8 @@ h1 {
   gap: 0.5rem;
 }
 
-.edit-btn, .delete-btn {
+.edit-btn,
+.delete-btn {
   padding: 0.5rem 0.8rem;
   border-radius: 4px;
   cursor: pointer;
@@ -178,7 +179,9 @@ textarea.modal-input {
   margin-top: 1.5rem;
 }
 
-.cancel-btn, .save-btn, .delete-confirm-btn {
+.cancel-btn,
+.save-btn,
+.delete-confirm-btn {
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
   cursor: pointer;
@@ -232,12 +235,13 @@ textarea.modal-input {
     align-items: flex-start;
     gap: 1rem;
   }
-  
+
   .actions-cell {
     flex-direction: column;
   }
-  
-  .edit-btn, .delete-btn {
+
+  .edit-btn,
+  .delete-btn {
     width: 100%;
     justify-content: center;
   }

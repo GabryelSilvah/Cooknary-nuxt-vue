@@ -1,83 +1,80 @@
 <template>
-  <div class="cargos-container">
-    <div class="header-section">
-      <h1>Lista de Cargos</h1>
-      <button class="add-button" @click="showAddModal = true">
-        <i class="fas fa-plus"></i> Adicionar Cargo
-      </button>
-    </div>
 
-    <div class="table-responsive">
-      <table class="cargos-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome do Cargo</th>
-            <th>Descrição</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="cargo in cargos" :key="cargo.id">
-            <td>{{ cargo.id }}</td>
-            <td>{{ cargo.nome }}</td>
-            <td>{{ cargo.descricao || '-' }}</td>
-            <td class="actions-cell">
-              <button class="edit-btn" @click="editCargo(cargo)">
-                <i class="fas fa-edit"></i> Editar
-              </button>
-              <button class="delete-btn" @click="confirmDelete(cargo)">
-                <i class="fas fa-trash"></i> Excluir
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <main>
 
-    <!-- Modal de Adicionar/Editar -->
-    <div v-if="showAddModal" class="modal-overlay">
-      <div class="modal">
-        <h2>{{ editingCargo ? 'Editar Cargo' : 'Adicionar Novo Cargo' }}</h2>
-        <div class="form-group">
-          <label>Nome do Cargo:</label>
-          <input 
-            type="text" 
-            v-model="currentCargo.nome" 
-            placeholder="Digite o nome do cargo"
-            class="modal-input"
-          />
+    <Menu/>
+
+    <div class="cargos-container">
+      <div class="header-section">
+        <h1>Lista de Cargos</h1>
+        <button class="add-button" @click="showAddModal = true">
+          <i class="fas fa-plus"></i> Adicionar Cargo
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="cargos-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome do Cargo</th>
+              <th>Descrição</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="cargo in cargos" :key="cargo.id">
+              <td>{{ cargo.id }}</td>
+              <td>{{ cargo.nome }}</td>
+              <td>{{ cargo.descricao || '-' }}</td>
+              <td class="actions-cell">
+                <button class="edit-btn" @click="editCargo(cargo)">
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+                <button class="delete-btn" @click="confirmDelete(cargo)">
+                  <i class="fas fa-trash"></i> Excluir
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Modal de Adicionar/Editar -->
+      <div v-if="showAddModal" class="modal-overlay">
+        <div class="modal">
+          <h2>{{ editingCargo ? 'Editar Cargo' : 'Adicionar Novo Cargo' }}</h2>
+          <div class="form-group">
+            <label>Nome do Cargo:</label>
+            <input type="text" v-model="currentCargo.nome" placeholder="Digite o nome do cargo" class="modal-input" />
+          </div>
+          <div class="form-group">
+            <label>Descrição:</label>
+            <textarea v-model="currentCargo.descricao" placeholder="Digite uma descrição (opcional)" class="modal-input"
+              rows="3"></textarea>
+          </div>
+          <div class="modal-buttons">
+            <button class="cancel-btn" @click="closeModal">Cancelar</button>
+            <button class="save-btn" @click="saveCargo">
+              {{ editingCargo ? 'Salvar' : 'Adicionar' }}
+            </button>
+          </div>
         </div>
-        <div class="form-group">
-          <label>Descrição:</label>
-          <textarea
-            v-model="currentCargo.descricao"
-            placeholder="Digite uma descrição (opcional)"
-            class="modal-input"
-            rows="3"
-          ></textarea>
-        </div>
-        <div class="modal-buttons">
-          <button class="cancel-btn" @click="closeModal">Cancelar</button>
-          <button class="save-btn" @click="saveCargo">
-            {{ editingCargo ? 'Salvar' : 'Adicionar' }}
-          </button>
+      </div>
+
+      <!-- Modal de Confirmação -->
+      <div v-if="showConfirmModal" class="modal-overlay">
+        <div class="modal confirm-modal">
+          <h2>Confirmar Exclusão</h2>
+          <p>Tem certeza que deseja excluir o cargo "{{ cargoToDelete.nome }}"?</p>
+          <div class="modal-buttons">
+            <button class="cancel-btn" @click="showConfirmModal = false">Cancelar</button>
+            <button class="delete-confirm-btn" @click="deleteCargo">Confirmar</button>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- Modal de Confirmação -->
-    <div v-if="showConfirmModal" class="modal-overlay">
-      <div class="modal confirm-modal">
-        <h2>Confirmar Exclusão</h2>
-        <p>Tem certeza que deseja excluir o cargo "{{ cargoToDelete.nome }}"?</p>
-        <div class="modal-buttons">
-          <button class="cancel-btn" @click="showConfirmModal = false">Cancelar</button>
-          <button class="delete-confirm-btn" @click="deleteCargo">Confirmar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -109,7 +106,7 @@ export default {
     },
     saveCargo() {
       if (!this.currentCargo.nome.trim()) return;
-      
+
       if (this.editingCargo) {
         const index = this.cargos.findIndex(c => c.id === this.currentCargo.id);
         if (index !== -1) {
@@ -123,7 +120,7 @@ export default {
           descricao: this.currentCargo.descricao
         });
       }
-      
+
       this.closeModal();
     },
     confirmDelete(cargo) {
