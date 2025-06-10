@@ -1,8 +1,6 @@
 <template>
-
   <main>
-
-    <Menu/>
+    <Menu />
 
     <div class="cargos-container">
       <div class="header-section">
@@ -18,7 +16,6 @@
             <tr>
               <th>ID</th>
               <th>Nome do Cargo</th>
-              <th>Descrição</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -26,7 +23,6 @@
             <tr v-for="cargo in cargos" :key="cargo.id">
               <td>{{ cargo.id }}</td>
               <td>{{ cargo.nome }}</td>
-              <td>{{ cargo.descricao || '-' }}</td>
               <td class="actions-cell">
                 <button class="edit-btn" @click="editCargo(cargo)">
                   <i class="fas fa-edit"></i> Editar
@@ -46,12 +42,12 @@
           <h2>{{ editingCargo ? 'Editar Cargo' : 'Adicionar Novo Cargo' }}</h2>
           <div class="form-group">
             <label>Nome do Cargo:</label>
-            <input type="text" v-model="currentCargo.nome" placeholder="Digite o nome do cargo" class="modal-input" />
-          </div>
-          <div class="form-group">
-            <label>Descrição:</label>
-            <textarea v-model="currentCargo.descricao" placeholder="Digite uma descrição (opcional)" class="modal-input"
-              rows="3"></textarea>
+            <input
+              type="text"
+              v-model="currentCargo.nome"
+              placeholder="Digite o nome do cargo"
+              class="modal-input"
+            />
           </div>
           <div class="modal-buttons">
             <button class="cancel-btn" @click="closeModal">Cancelar</button>
@@ -78,67 +74,114 @@
 </template>
 
 <script>
+import {
+  cargoListar,
+  cargoCadastrar,
+  cargoAlterar,
+  cargoDeletar
+} from '~/assets/js/request_api_cargo.js';
+
 export default {
   data() {
     return {
-      cargos: [
-        { id: 1, nome: 'Gerente', descricao: 'Responsável pela gestão da equipe' },
-        { id: 2, nome: 'Desenvolvedor', descricao: 'Desenvolvimento de sistemas' },
-        { id: 3, nome: 'Designer', descricao: 'Design de interfaces e produtos' },
-        { id: 4, nome: 'Analista', descricao: 'Análise de requisitos e processos' },
-      ],
+      cargos: [],
       showAddModal: false,
       showConfirmModal: false,
       editingCargo: false,
       currentCargo: {
         id: null,
-        nome: '',
-        descricao: ''
+        nome: ''
       },
-      cargoToDelete: {}
-    }
+      cargoToDelete: {},
+      loading: false,
+      error: null
+    };
+  },
+  async mounted() {
+    await this.loadCargos();
   },
   methods: {
+    async loadCargos() {
+      this.loading = true;
+      try {
+        const { data, error } = await cargoListar();
+        if (error) throw error;
+
+        this.cargos = Array.isArray(data)
+          ? data
+          : data?.value || [];
+
+      } catch (error) {
+        console.error('Erro ao carregar cargos:', error);
+        this.error = 'Falha ao carregar a lista de cargos';
+      } finally {
+        this.loading = false;
+      }
+    },
     editCargo(cargo) {
       this.currentCargo = { ...cargo };
       this.editingCargo = true;
       this.showAddModal = true;
     },
-    saveCargo() {
-      if (!this.currentCargo.nome.trim()) return;
-
-      if (this.editingCargo) {
-        const index = this.cargos.findIndex(c => c.id === this.currentCargo.id);
-        if (index !== -1) {
-          this.cargos.splice(index, 1, { ...this.currentCargo });
-        }
-      } else {
-        const newId = Math.max(...this.cargos.map(c => c.id), 0) + 1;
-        this.cargos.push({
-          id: newId,
-          nome: this.currentCargo.nome,
-          descricao: this.currentCargo.descricao
-        });
+    async saveCargo() {
+      if (!this.currentCargo.nome.trim()) {
+        this.error = 'O nome do cargo é obrigatório';
+        return;
       }
 
-      this.closeModal();
+      this.loading = true;
+      try {
+        if (this.editingCargo) {
+          const { error } = await cargoAlterar(this.currentCargo.id, {
+            nome: this.currentCargo.nome
+          });
+          if (error) throw error;
+        } else {
+          const { error } = await cargoCadastrar({
+            nome: this.currentCargo.nome
+          });
+          if (error) throw error;
+        }
+
+        await this.loadCargos();
+        this.closeModal();
+
+      } catch (error) {
+        console.error('Erro ao salvar cargo:', error);
+        this.error = 'Erro ao salvar o cargo';
+      } finally {
+        this.loading = false;
+      }
     },
     confirmDelete(cargo) {
       this.cargoToDelete = { ...cargo };
       this.showConfirmModal = true;
     },
-    deleteCargo() {
-      this.cargos = this.cargos.filter(c => c.id !== this.cargoToDelete.id);
-      this.showConfirmModal = false;
+    async deleteCargo() {
+      this.loading = true;
+      try {
+        const { error } = await cargoDeletar(this.cargoToDelete.id);
+        if (error) throw error;
+
+        await this.loadCargos();
+        this.showConfirmModal = false;
+
+      } catch (error) {
+        console.error('Erro ao excluir cargo:', error);
+        this.error = 'Erro ao excluir o cargo';
+      } finally {
+        this.loading = false;
+      }
     },
     closeModal() {
       this.showAddModal = false;
       this.showConfirmModal = false;
-      this.currentCargo = { id: null, nome: '', descricao: '' };
+      this.currentCargo = { id: null, nome: '' };
       this.editingCargo = false;
+      this.error = null;
     }
   }
-}
+};
 </script>
 
 <style scoped>

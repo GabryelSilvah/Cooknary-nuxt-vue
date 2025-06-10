@@ -46,7 +46,7 @@
             </nuxt-link>
           </li>
           <li>
-            <nuxt-link :to="{ path: '/categoria', query: { id_categoira: 1 } }">
+            <nuxt-link :to="{ path: '/categoria', query: { id_categoria: 1 } }">
               <i class="fa fa-list-alt"></i> Categoria
             </nuxt-link>
           </li>

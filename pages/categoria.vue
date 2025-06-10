@@ -1,6 +1,7 @@
 <template>
 
-  <Menu/>
+  <main>
+  <Menu />
   <div class="categorias-container">
     <div class="header-section">
       <h1>Lista de Categorias</h1>
@@ -41,9 +42,9 @@
         <h2>{{ editingCategoria ? 'Editar Categoria' : 'Adicionar Nova Categoria' }}</h2>
         <div class="form-group">
           <label>Nome da Categoria:</label>
-          <input 
-            type="text" 
-            v-model="currentCategoria.nome_categoria" 
+          <input
+            type="text"
+            v-model="currentCategoria.nome_categoria"
             placeholder="Digite o nome da categoria"
             class="modal-input"
             required
@@ -70,68 +71,102 @@
       </div>
     </div>
   </div>
+</main>
 </template>
 
 <script>
+// importe suas funções de API
+import {
+  categoriaListar,
+  categoriaById,
+  categoriaCadastrar,
+  categoriaAlterar,
+  categoriaDeletar,
+}from "@/assets/js/request_api_categorias.js";
+
 export default {
   data() {
     return {
-      categorias: [
-        { id_cat: 1, nome_categoria: "Massas" },
-        { id_cat: 2, nome_categoria: "Carnes" },
-        { id_cat: 3, nome_categoria: "Sobremesas" },
-        { id_cat: 4, nome_categoria: "Bebidas" },
-      ],
+      categorias: [],
       showAddModal: false,
       showConfirmModal: false,
       editingCategoria: false,
       currentCategoria: {
         id_cat: null,
-        nome_categoria: ''
+        nome_categoria: "",
       },
-      categoriaToDelete: {}
-    }
+      categoriaToDelete: {},
+    };
+  },
+  mounted() {
+    this.carregarCategorias();
   },
   methods: {
+    async carregarCategorias() {
+      const data = await categoriaListar();
+      if (data) {
+        this.categorias = data;
+      } else {
+        this.categorias = [];
+      }
+    },
     editCategoria(categoria) {
       this.currentCategoria = { ...categoria };
       this.editingCategoria = true;
       this.showAddModal = true;
     },
-    saveCategoria() {
-      if (!this.currentCategoria.nome_categoria.trim()) return;
-      
+    async saveCategoria() {
+      if (!this.currentCategoria.nome_categoria.trim()) {
+        alert("O nome da categoria é obrigatório.");
+        return;
+      }
+
       if (this.editingCategoria) {
-        const index = this.categorias.findIndex(c => c.id_cat === this.currentCategoria.id_cat);
-        if (index !== -1) {
-          this.categorias.splice(index, 1, { ...this.currentCategoria });
+        // Atualizar categoria via API
+        const atualizado = await categoriaAlterar(
+          this.currentCategoria.id_cat,
+          { nome_categoria: this.currentCategoria.nome_categoria }
+        );
+        if (atualizado) {
+          await this.carregarCategorias();
+          this.closeModal();
+        } else {
+          alert("Erro ao atualizar categoria.");
         }
       } else {
-        const newId = Math.max(...this.categorias.map(c => c.id_cat), 0) + 1;
-        this.categorias.push({
-          id_cat: newId,
-          nome_categoria: this.currentCategoria.nome_categoria
+        // Cadastrar nova categoria via API
+        const cadastrado = await categoriaCadastrar({
+          nome_categoria: this.currentCategoria.nome_categoria,
         });
+        if (cadastrado) {
+          await this.carregarCategorias();
+          this.closeModal();
+        } else {
+          alert("Erro ao cadastrar categoria.");
+        }
       }
-      
-      this.closeModal();
     },
     confirmDelete(categoria) {
       this.categoriaToDelete = { ...categoria };
       this.showConfirmModal = true;
     },
-    deleteCategoria() {
-      this.categorias = this.categorias.filter(c => c.id_cat !== this.categoriaToDelete.id_cat);
-      this.showConfirmModal = false;
+    async deleteCategoria() {
+      const deletado = await categoriaDeletar(this.categoriaToDelete.id_cat);
+      if (deletado) {
+        await this.carregarCategorias();
+        this.showConfirmModal = false;
+      } else {
+        alert("Erro ao excluir categoria.");
+      }
     },
     closeModal() {
       this.showAddModal = false;
       this.showConfirmModal = false;
-      this.currentCategoria = { id_cat: null, nome_categoria: '' };
+      this.currentCategoria = { id_cat: null, nome_categoria: "" };
       this.editingCategoria = false;
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
