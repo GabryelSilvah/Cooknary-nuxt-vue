@@ -1,18 +1,24 @@
+.container_form_cadastro {}
+
 .container_form {
     width: 100vw;
     height: 100vh;
     background-color: #00000099;
     position: fixed;
     top: 0;
-    z-index: 999;
     display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 999;
 }
 
+
+
+.container_form_edit {}
+
 .form {
-    width: 50vw;
+    width: 42vw;
     height: 80vh;
     background-color: #fff;
     max-width: 100%;
@@ -54,6 +60,7 @@
 }
 
 .form .sections {
+    position: relative;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -99,9 +106,11 @@
     border: 1.5 solid black;
     padding: 7px;
 }
-.select_ingred{
+
+.select_ingred {
     max-width: fit-content;
 }
+
 .form button {
     min-width: 120px;
     border: none;
@@ -152,16 +161,11 @@
     gap: 10px;
 }
 
-.container_itens_add p {
+.container_itens_add h2 {
     background-color: #0078e1b8;
     color: #fff;
     padding: 4px;
     border-radius: 4px;
-}
-
-
-.container_composicao p {
-    background-color: black;
 }
 
 .input_quantidade {
@@ -169,4 +173,10 @@
     max-width: 60px;
     max-height: 40px;
     border-radius: 2px;
+}
+
+.btn_submit {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
 }

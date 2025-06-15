@@ -1,0 +1,91 @@
+<template>
+
+
+  <section class="container_form container_form_cadastro">
+
+    <form action="POST" @submit.prevent="" class="form">
+      <img src="public/icones/close.png" id="btn_close" @click="fecharForm">
+      <div class="sections">
+
+        <label for="">Titulo do livro</label>
+        <input type="text" placeholder="Ex: Receitas Premium">
+
+        <label for="">Criado por</label>
+        <input type="text">
+
+        <div class="container_itens_add" id="caixa_de_itens_salvas">
+          <h2>Escolha as receitas</h2>
+          <div class="container_composicao"
+            v-for="composicao_livro in livroModel.composicao_receitas">
+            <p>{{ composicao_livro.fk_receita.nome_receita }}</p>
+            <p>por: Gabriel </p>
+          </div>
+        </div>
+
+        <select name="" id="" v-model="receita_ref">
+          <option value="0" selected>Selecione</option>
+          <option :value="receita.id_receita" v-for="receita in listaReceitas">{{ receita.nome_receita }}</option>
+        </select>
+
+
+        <button type="button" @click="addReceitasNaLista" class="btn_adicionar">
+          Adicionar
+        </button>
+
+        <button type="submit" class="btn_submit">
+          Criar Livro
+        </button>
+
+      </div>
+    </form>
+
+  </section>
+
+
+</template>
+<style>
+@import url("~/assets/css_components/form.css");
+</style>
+
+<script lang="js" setup>
+import { byIdAllInfor } from '~/common/api/receitas_request';
+
+//Definindo dados que devem ser pré-carregados
+defineProps(
+  {
+    listaReceitas: Object
+  }
+);
+
+//Definindo ligação bilateral com inputs
+const receita_ref = defineModel("receita_ref");
+const livroModel = defineModel("livroModel", { default: { composicao_receitas: [] } });
+
+
+//Função para pegar receitas selecionadas e exibir no campo de formulário
+async function addReceitasNaLista() {
+
+  const receitaEncontrada = await byIdAllInfor(receita_ref.value);
+
+  console.log(receitaEncontrada.value);
+
+  const composicao_receitas = {
+    fk_receita: {
+      id_receita: receitaEncontrada.value.data.id_receita,
+      nome_receita: receitaEncontrada.value.data.nome_receita
+    }
+  };
+
+  livroModel.value.composicao_receitas.push(composicao_receitas);
+
+  console.log(JSON.stringify(livroModel.value.composicao_receitas))
+
+}
+
+
+//Fechar formulário
+function fecharForm() {
+    let container_form_cadastro = document.querySelector(".container_form_cadastro");
+    container_form_cadastro.setAttribute("style", "display:none");
+}
+</script>
