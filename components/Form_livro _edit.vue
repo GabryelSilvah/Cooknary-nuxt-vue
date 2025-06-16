@@ -1,9 +1,9 @@
 <template>
 
 
-  <section class="container_form container_form_cadastro">
+  <section class="container_form container_form_edit">
 
-    <form action="POST" @submit.prevent="cadastrarLivro" class="form">
+    <form action="POST" @submit.prevent="alterarLivro(livroModel.id_livro)" class="form">
       <img src="public/icones/close.png" id="btn_close" @click="fecharForm">
       <div class="sections">
 
@@ -23,7 +23,7 @@
         <div class="container_itens_add" id="caixa_de_itens_salvas">
           <h2>Coleção de receitas do livro</h2>
           <div class="container_composicao" v-for="composicao_livro in livroModel.composicao_receitas">
-            <p>{{ composicao_livro.fk_receita.nome_receita }}</p>
+            <p>{{ composicao_livro.nome_receita }}</p>
             <p>por: Gabriel </p>
           </div>
         </div>
@@ -42,7 +42,7 @@
         </button>
 
         <button type="submit" class="btn_submit">
-          Criar Livro
+          Atualizar Livro
         </button>
 
       </div>
@@ -57,7 +57,7 @@
 </style>
 
 <script lang="js" setup>
-import { cadastrarLivros } from '~/common/api/livros_request';
+import { alterarLivros } from '~/common/api/livros_request';
 import { byIdAllInfor } from '~/common/api/receitas_request';
 
 //Definindo dados que devem ser pré-carregados
@@ -71,18 +71,22 @@ defineProps(
 
 //Definindo ligação bilateral com inputs
 const receita_ref = defineModel("receita_ref");
-const livroModel = ref({
-  titulo_livro: "",
-  isbn: 27494,
-  editor: { id_func: 1 },
-  composicao_receitas: []
+const livroModel = defineModel("livroModel", {
+  default: {
+    id_livro: 0,
+    titulo_livro: "",
+    isbn: 27494,
+    editor: { id_func: 1 },
+    composicao_receitas: []
+  }
 });
 
 
 
 
-async function cadastrarLivro() {
-  const livroCadastrado = await cadastrarLivros(livroModel.value);
+async function alterarLivro(id_livro) {
+  console.log("Forma " + id_livro);
+  const livroAlterado = await alterarLivros(id_livro, livroModel.value);
   fecharForm();
 
 }
@@ -115,7 +119,7 @@ async function addReceitasNaLista() {
 
 //Fechar formulário
 function fecharForm() {
-  let container_form_cadastro = document.querySelector(".container_form_cadastro");
+  let container_form_cadastro = document.querySelector(".container_form_edit");
   container_form_cadastro.setAttribute("style", "display:none");
 }
 </script>

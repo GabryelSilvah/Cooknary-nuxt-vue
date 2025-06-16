@@ -37,7 +37,7 @@ async function cadastrarLivros(corpo_request) {
   const { data: responseAPI, error: errorAPI } = await useFetch(URL_BASE_API + "/cadastrar",
     {
       method: "POST",
-      headers: { "Content-Type": "applilivroion/json" },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(corpo_request)
     });
 
@@ -48,7 +48,7 @@ async function cadastrarLivros(corpo_request) {
 async function alterarLivros(id_livro, corpo_request) {
   const { data: responseAPI, error: errorAPI } = await useFetch(URL_BASE_API + "/alterar/" + id_livro, {
     method: "PUT",
-    headers: { "Content-Type": "applilivroion/json" },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(corpo_request)
   });
 
@@ -59,7 +59,7 @@ async function alterarLivros(id_livro, corpo_request) {
 async function deletarLivros(id_livro) {
   const { data: responseAPI, error: errorAPI } = await useFetch(URL_BASE_API + "/excluir/" + id_livro, {
     method: "DELETE",
-    headers: { "Content-Type": "applilivroion/json" }
+    headers: { "Content-Type": "application/json" }
   });
 
   return responseAPI;
